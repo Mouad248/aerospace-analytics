@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "engine-prognostics-lab"
+version = "1.0.0"
+description = "Engine-separated C-MAPSS prognostics with causal features and calibrated intervals"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = ["numpy==2.5.5", "pandas==3.1.1", "scikit-learn==1.9.1", "joblib==1.6.0", "threadpoolctl>=3.5,<4"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10", "playwright>=1.50,<2"]
+
+[project.scripts]
+engine-lab = "engine_lab.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

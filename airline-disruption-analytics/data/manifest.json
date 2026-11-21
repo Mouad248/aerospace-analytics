@@ -1,0 +1,85 @@
+{
+  "publisher": "U.S. Bureau of Transportation Statistics, TranStats",
+  "dataset": "Marketing Carrier On-Time Performance, beginning January 2018",
+  "table_page": "https://www.transtats.bts.gov/TableInfo.asp?QO_fu146_anzr=b0-gvzr&gnoyr_VQ=FGK",
+  "field_reference": "https://transtats.bts.gov/Fields.asp?gnoyr_VQ=FGK",
+  "use_terms": "Public BTS data; this manifest does not assert a separate reuse licence. Cite BTS and do not redistribute the raw archives from this project.",
+  "selected_periods": {
+    "fit": "2025-01 through 2025-04",
+    "validation_calibration": "2025-05",
+    "held_out_test": "2025-06"
+  },
+  "files": [
+    {
+      "month": "2025-01",
+      "url": "https://transtats.bts.gov/PREZIP/On_Time_Marketing_Carrier_On_Time_Performance_Beginning_January_2018_2025_1.zip",
+      "file": "data/raw/On_Time_Marketing_Carrier_On_Time_Performance_Beginning_January_2018_2025_1.zip",
+      "bytes": 31599374,
+      "sha256": "0feaabdbc9e4bd851ef717f342678cdcc5ea0822dd706359aab030bb1a5d1c24"
+    },
+    {
+      "month": "2025-02",
+      "url": "https://transtats.bts.gov/PREZIP/On_Time_Marketing_Carrier_On_Time_Performance_Beginning_January_2018_2025_2.zip",
+      "file": "data/raw/On_Time_Marketing_Carrier_On_Time_Performance_Beginning_January_2018_2025_2.zip",
+      "bytes": 29442140,
+      "sha256": "080ad48e2826a6b4c3f39690f75a08dea9ad4e0831ff82958656cdb61693dd15"
+    },
+    {
+      "month": "2025-03",
+      "url": "https://transtats.bts.gov/PREZIP/On_Time_Marketing_Carrier_On_Time_Performance_Beginning_January_2018_2025_3.zip",
+      "file": "data/raw/On_Time_Marketing_Carrier_On_Time_Performance_Beginning_January_2018_2025_3.zip",
+      "bytes": 35460382,
+      "sha256": "ad3f46a598bd529588bfcc004731b893b27999a681804a07a3841b2904d66d48"
+    },
+    {
+      "month": "2025-04",
+      "url": "https://transtats.bts.gov/PREZIP/On_Time_Marketing_Carrier_On_Time_Performance_Beginning_January_2018_2025_4.zip",
+      "file": "data/raw/On_Time_Marketing_Carrier_On_Time_Performance_Beginning_January_2018_2025_4.zip",
+      "bytes": 34062432,
+      "sha256": "88b88ae1a9b49a03cb82c835481ac8dcf86ff2d378614655638889866767608f"
+    },
+    {
+      "month": "2025-05",
+      "url": "https://transtats.bts.gov/PREZIP/On_Time_Marketing_Carrier_On_Time_Performance_Beginning_January_2018_2025_5.zip",
+      "file": "data/raw/On_Time_Marketing_Carrier_On_Time_Performance_Beginning_January_2018_2025_5.zip",
+      "bytes": 35708775,
+      "sha256": "261fb75b956abedca34a27db3ae7221437e1a2ce349b5ee9a49ec267d7555b29"
+    },
+    {
+      "month": "2025-06",
+      "url": "https://transtats.bts.gov/PREZIP/On_Time_Marketing_Carrier_On_Time_Performance_Beginning_January_2018_2025_6.zip",
+      "file": "data/raw/On_Time_Marketing_Carrier_On_Time_Performance_Beginning_January_2018_2025_6.zip",
+      "bytes": 36074147,
+      "sha256": "0cb4038a49962ab92cba33f9840a8eec9671ef19a5afeedfa27998984476b609"
+    }
+  ],
+  "prepared_data": {
+    "path": "data/cache/bts_flights.parquet",
+    "rows": 3809371,
+    "duplicate_flagged_rows_excluded": 0,
+    "rows_missing_completed_arrival_label": 0,
+    "columns": [
+      "flight_id",
+      "flight_date",
+      "carrier",
+      "tail_hash",
+      "origin",
+      "destination",
+      "crs_dep_time",
+      "actual_dep_time",
+      "crs_elapsed_min",
+      "actual_elapsed_min",
+      "arrival_delay_min",
+      "arrival_delay_minutes",
+      "arrival_delay_15",
+      "cancelled",
+      "diverted",
+      "distance_mi",
+      "duplicate_flag",
+      "source_month"
+    ],
+    "aircraft_tail_numbers_hashed": true,
+    "sha256": "6f6d2345b3f17bc95c6eaf82f9df0091f26fdc4081dd8120b35c3bc3c6dcc447",
+    "bytes": 41021979
+  }
+}

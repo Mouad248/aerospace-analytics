@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "installed_from_wheel": true,
+  "executed_outside_source_checkout": true,
+  "subsets_checked": 4,
+  "label_free_predictions_matched": 707,
+  "maximum_allowed_difference": 1e-09
+}

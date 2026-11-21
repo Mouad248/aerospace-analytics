@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "airline-disruption-analytics"
+version = "1.0.0"
+description = "Temporal flight disruption ML with aircraft rotation analysis and CP-SAT scenarios"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+  "numpy>=2,<3", "pandas>=2.2,<4", "polars>=1.20,<2", "pyarrow>=18,<25",
+  "duckdb>=1.2,<2", "scikit-learn>=1.6,<2", "lightgbm>=4.5,<5",
+  "networkx>=3.4,<4", "ortools>=9.12,<10", "airportsdata>=20261103,<20261200",
+  "scipy>=1.13,<2", "joblib>=1.4,<2", "threadpoolctl>=3.5,<4", "pillow>=10,<13"
+]
+
+[project.scripts]
+airline-lab = "airline_ops.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "subsets_checked": 4,
+  "trajectory_controls_checked": true,
+  "review_horizon_controls_checked": true,
+  "downloaded_prediction_rows_verified": 707,
+  "desktop": "1440x1050",
+  "mobile": "390x844",
+  "document_overflow": false,
+  "javascript_errors": [],
+  "external_requests": []
+}

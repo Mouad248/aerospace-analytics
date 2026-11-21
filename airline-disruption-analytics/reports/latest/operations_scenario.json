@@ -1,0 +1,14 @@
+{
+  "heldout_day": "2025-06-30",
+  "tail_rows_with_timezone": 22065,
+  "plausible_same_tail_airport_turn_links": 16242,
+  "prior_arrival_vs_next_arrival_delay_correlation_descriptive": 0.48878307543151894,
+  "scenario": {
+    "candidate_flights": 30,
+    "assumed_total_buffer_budget_min": 240,
+    "allocated_min": 240,
+    "mean_q90_before_min": 227.59442842397908,
+    "mean_q90_after_min": 219.59442842397908,
+    "interpretation": "Deterministic what-if allocation with an assumed objective; not an observed schedule intervention."
+  }
+}

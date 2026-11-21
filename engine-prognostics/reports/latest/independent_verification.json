@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "subsets": 4,
+  "official_test_engines": 707,
+  "metrics_recomputed_from_original_labels": true,
+  "fit_only_normalization_verified": true,
+  "engine_splits_disjoint_and_reproduced": true,
+  "model_hashes_verified": true,
+  "csv_rows_verified": 707
+}

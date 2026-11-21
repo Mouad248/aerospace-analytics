@@ -1,0 +1,96 @@
+{
+  "sample": {
+    "prepared_rows": 3809371,
+    "train_rows_used": 650000,
+    "validation_rows": 667586,
+    "june_test_rows": 674179,
+    "june_completed_nondiverted_delay_rows": 659673,
+    "test_positive_rate": 0.298543858530153
+  },
+  "disruption": {
+    "roc_auc": 0.6548707570609109,
+    "average_precision": 0.422703378919827,
+    "brier_score": 0.1995236201977407,
+    "baseline_route_28d_brier": 0.20473357811837192,
+    "calibration": [
+      {
+        "predicted_probability": 0.10351997644250774,
+        "observed_rate": 0.12143585262851318
+      },
+      {
+        "predicted_probability": 0.14636564667460158,
+        "observed_rate": 0.1729401586580055
+      },
+      {
+        "predicted_probability": 0.17916386477284466,
+        "observed_rate": 0.21006311157431531
+      },
+      {
+        "predicted_probability": 0.2076201486937062,
+        "observed_rate": 0.25051526750610525
+      },
+      {
+        "predicted_probability": 0.23306581899197357,
+        "observed_rate": 0.2814318160604835
+      },
+      {
+        "predicted_probability": 0.26051011546909236,
+        "observed_rate": 0.3200522534291313
+      },
+      {
+        "predicted_probability": 0.28591257078396926,
+        "observed_rate": 0.3511930823117338
+      },
+      {
+        "predicted_probability": 0.32067158527745027,
+        "observed_rate": 0.3942970732912558
+      },
+      {
+        "predicted_probability": 0.36521436641783284,
+        "observed_rate": 0.43897154133374605
+      },
+      {
+        "predicted_probability": 0.4296283714855607,
+        "observed_rate": 0.49425399615847904
+      }
+    ]
+  },
+  "delay_q90": {
+    "mae": 54.59638300055823,
+    "raw_mae": 44.387827946510505,
+    "p90_prediction": 77.0955844118361,
+    "raw_p90_prediction": 62.39368909566031,
+    "empirical_coverage": 0.8706450013870508,
+    "raw_empirical_coverage": 0.8180007367286519,
+    "validation_coverage_before_calibration": 0.8527013290505501,
+    "validation_coverage_after_calibration": 0.9000028869281413,
+    "calibration_method": "May-only finite-sample split-conformal additive correction",
+    "calibration_rows": 658139,
+    "calibration_quantile_level": 0.9000013674922774,
+    "calibration_offset_min": 14.701895316175786,
+    "actual_p90": 69.0,
+    "rows": 659673
+  },
+  "features": [
+    "carrier",
+    "origin",
+    "destination",
+    "route",
+    "dep_hour",
+    "day_of_week",
+    "month",
+    "distance_mi",
+    "origin_28d_rate",
+    "destination_28d_rate",
+    "route_28d_rate",
+    "carrier_28d_rate"
+  ],
+  "validation_month": "2025-05",
+  "test_month": "2025-06",
+  "limits": [
+    "Only pre-departure schedule/operator/location/distance and prior observed 28-day history are model inputs.",
+    "Six months of U.S. records; June is one temporal holdout month, and results are not transferable without validation.",
+    "No weather forecast, passenger connections, crew, gate, maintenance or airline-cost data.",
+    "CP-SAT buffer allocation is an assumption-led scenario, not measured airline recovery benefit."
+  ]
+}
