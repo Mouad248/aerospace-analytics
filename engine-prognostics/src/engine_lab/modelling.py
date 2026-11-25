@@ -12,6 +12,7 @@ from threadpoolctl import threadpool_limits
 
 from .data import last_indices, pseudo_endpoints, split_engines, training_rul
 from .features import FeatureBuilder
+from .monitoring import build_reference_profile
 
 
 def metrics(truth, prediction):
@@ -149,6 +150,9 @@ def train_subset(train, test, test_truth, subset, seed=2026, cap=125, alpha=0.2)
     }
     selected = min(selection, key=lambda name: (selection[name]["mae"], name))
     model = candidates[selected]
+    model.reference_profile = build_reference_profile(
+        x, features.feature_names
+    )
     calibration = groups["calibration"]
     cal_indices = pseudo_endpoints(calibration, seed)
     cal_truth = training_rul(calibration)[cal_indices]

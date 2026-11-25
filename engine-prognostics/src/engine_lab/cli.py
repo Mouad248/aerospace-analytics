@@ -17,6 +17,7 @@ from threadpoolctl import threadpool_limits
 
 from .data import SUBSETS, read_subset, read_trajectory
 from .modelling import train_subset
+from .mlops import promotion_gate
 from .report import write_report
 
 ARCHIVE_URL = "https://data.nasa.gov/docs/legacy/CMAPSSData.zip"
@@ -73,6 +74,12 @@ def train(args):
         "subsets": {},
     }
     all_rows = []
+    if not args.no_tracking:
+        import mlflow
+        from .mlops import log_training_run
+
+        mlflow.set_tracking_uri(args.tracking_uri)
+        mlflow.set_experiment("Engine Prognostics | C-MAPSS")
     for subset in args.subsets:
         print(
             f"Training {subset}: fit / validation / calibration engines kept separate",
@@ -93,6 +100,8 @@ def train(args):
             raise ValueError("Saved model failed prediction round-trip")
         metrics["model_reload_verified"] = True
         metrics["model_sha256"] = hashlib.sha256(destination.read_bytes()).hexdigest()
+        gate = promotion_gate(metrics)
+        metrics["promotion_gate"] = gate
         results["provenance"]["model_links"][subset] = Path(
             os.path.relpath(destination, output)
         ).as_posix()
@@ -103,6 +112,16 @@ def train(args):
             "predictions": predictions,
             "trajectories": trajectories,
         }
+        if not args.no_tracking:
+            log_training_run(
+                subset=subset,
+                model=model,
+                model_path=destination,
+                metrics=metrics,
+                seed=args.seed,
+                rul_cap=args.rul_cap,
+                archive_sha256=results["provenance"]["archive_sha256"],
+            )
         all_rows.extend({"subset": subset, **row} for row in predictions)
         print(
             f"{subset}: selected {metrics['selected_model']}; official RMSE {metrics['test']['rmse']:.2f}, "
@@ -138,6 +157,16 @@ def main(argv=None):
     tr.add_argument("--models", type=Path, default=Path("models"))
     tr.add_argument("--seed", type=int, default=2026)
     tr.add_argument("--rul-cap", type=float, default=125)
+    tr.add_argument(
+        "--tracking-uri",
+        default=os.environ.get("MLFLOW_TRACKING_URI", "sqlite:///mlflow.db"),
+        help="MLflow tracking URI; defaults to a local SQLite store",
+    )
+    tr.add_argument(
+        "--no-tracking",
+        action="store_true",
+        help="retrain and export models without opening an MLflow run",
+    )
     pred = commands.add_parser(
         "predict",
         help="predict terminal RUL from a trusted fitted model and observed prefixes",
@@ -145,12 +174,16 @@ def main(argv=None):
     pred.add_argument("--model", type=Path, required=True)
     pred.add_argument("--input", type=Path, required=True)
     pred.add_argument("--output", type=Path, required=True)
+    serve = commands.add_parser("serve", help="run the prediction and monitoring API")
+    serve.add_argument("--model", type=Path, required=True)
+    serve.add_argument("--host", default="127.0.0.1")
+    serve.add_argument("--port", type=int, default=8000)
     args = parser.parse_args(argv)
     if args.command == "download":
         retrieve(args.archive)
     elif args.command == "train":
         train(args)
-    else:
+    elif args.command == "predict":
         model = joblib.load(args.model)
         frame = read_trajectory(args.input)
         prediction, lower, upper = model.terminal(frame)
@@ -164,3 +197,14 @@ def main(argv=None):
                     [row.engine, row.cycle, prediction[i], lower[i], upper[i]]
                 )
         print(f"Predicted {len(terminal)} engines without loading any RUL label file")
+    else:
+        import uvicorn
+        from .api import create_app
+
+        uvicorn.run(
+            create_app(args.model.resolve()),
+            host=args.host,
+            port=args.port,
+            log_level="info",
+            access_log=True,
+        )

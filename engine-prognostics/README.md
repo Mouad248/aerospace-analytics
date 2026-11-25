@@ -17,7 +17,7 @@ Open the **[offline report](reports/latest/index.html)** after downloading the r
 
 ## Run
 
-Python **3.12+**, validated here with Python 3.13. Tools: **NumPy, pandas, scikit-learn, joblib and threadpoolctl**; native SVG/JavaScript for the offline report. No GPU, paid API, cloud service, R or Stata is needed. CPU thread use is limited to two for model operations.
+Python **3.12+**. Tools: **NumPy, pandas, scikit-learn, joblib, MLflow, FastAPI and Uvicorn**; native SVG/JavaScript for the offline report. No GPU, paid API, cloud service, R or Stata is needed. CPU thread use is limited to two for model operations.
 
 ```powershell
 python -m venv .venv
@@ -60,6 +60,68 @@ Validation/calibration endpoints are chosen once per engine at a deterministic 3
 The review slider flags an engine when the lower interval bound crosses an assumed horizon. This illustrates the tradeoff between missed near-failure cases and review workload. It is not an optimized maintenance policy, certified safety limit, actual intervention or estimate of money saved. Actual fleets, sensor faults, censored field outcomes, changing operating conditions and operational economics need separate validation before deployment.
 
 The first three test units provide reproducible trajectory illustrations selected by ID, not by performance. Actual trajectory lines are reconstructed retrospectively for comparison; predictions at each displayed cycle use only prior/current observations and the previously fitted model.
+
+## MLOps lifecycle
+
+This repository also demonstrates a compact, end-to-end lifecycle around the prognostic model:
+
+```mermaid
+flowchart LR
+    A[NASA simulated archive] --> B[Schema and checksum checks]
+    B --> C[Engine-separated fit / validation / calibration]
+    C --> D[Model selection and interval calibration]
+    D --> E{Validation MAE gate}
+    E -->|Pass| F[MLflow model version]
+    E -->|Block| G[Tracked run with reason]
+    F --> H[Reviewed model snapshot]
+    H --> I[Docker FastAPI service]
+    I --> J[Predictions and uncertainty interval]
+    I --> K[PSI input drift summary]
+```
+
+- **Experiment tracking:** each fleet run logs its seed, model choice, feature count, dataset hash, validation metrics and separate official-test diagnostics to MLflow. The default backend is local SQLite (`mlflow.db`), which is ignored by Git.
+- **Promotion gate:** a model can be registered only when its engine-separated validation MAE beats the age-only baseline. The official test set never decides promotion. A blocked candidate is still recorded with its reason.
+- **Model lineage:** MLflow stores the serialized predictor and, for a passing candidate, registers a versioned model with the experiment that produced it.
+- **Input contract and inference:** FastAPI validates the 26 source columns, integer engine/cycle identifiers, finite values and contiguous observed cycles before returning RUL intervals.
+- **Drift monitoring:** inference compares engineered input-feature distributions with the fitting-engine reference profile using PSI (Population Stability Index). The 0.20 alert line is a heuristic for investigation, not a universal threshold or proof of model failure.
+- **Packaging and CI:** Docker Compose provides a local prediction API and MLflow UI; GitHub Actions runs the existing focused test suite and builds the deployment image.
+
+### Local run
+
+Install the package as shown above, then train the four models. The training command creates/upgrades the SQLite tracking store and registers only candidates that pass the validation gate:
+
+```powershell
+.venv\Scripts\python.exe run.py train --tracking-uri sqlite:///mlflow.db
+.venv\Scripts\python.exe -m mlflow server --backend-store-uri sqlite:///mlflow.db --host 127.0.0.1 --port 5000 --workers 1
+```
+
+Open `http://127.0.0.1:5000` for experiments and registered model versions. In another terminal, start one fleet-specific API:
+
+```powershell
+.venv\Scripts\python.exe run.py serve --model models/FD001.joblib --host 127.0.0.1 --port 8000
+```
+
+The interactive API contract is at `http://127.0.0.1:8000/docs`; `GET /health` shows the loaded fleet and `GET /schema` gives the exact input columns. `POST /predict` accepts observed trajectory rows as JSON records. Each request must contain complete cycles beginning at cycle 1; it returns one estimate per engine plus an input-drift summary. It never accepts or requires an RUL target.
+
+### Docker run
+
+With Docker Desktop running:
+
+```powershell
+docker compose up --build
+```
+
+The API is at `http://127.0.0.1:8000/docs` (FD001 snapshot); the MLflow UI is at `http://127.0.0.1:5000`. Both ports bind to localhost only. The container image excludes raw source data, reports, tests and local experiment databases. It contains the published FD001 model snapshot; to deploy a newly trained model, rebuild the image from the reviewed artifact.
+
+To send a training run to the Compose MLflow server instead of the local SQLite file, run this from the project directory after Compose is up:
+
+```powershell
+.venv\Scripts\python.exe run.py train --tracking-uri http://127.0.0.1:5000
+```
+
+### Operational scope
+
+This is a reproducible local demonstration, not a production airline service. C-MAPSS is simulated; PSI detects changes in input distributions but cannot establish a change in predictive accuracy without later observed outcomes. The promotion rule is a transparent portfolio-project gate, not an aviation safety standard. No automatic retraining or maintenance action is triggered. A real deployment would require licensed operational data, delayed-outcome monitoring, security review, service authentication, a managed artifact store and domain approval.
 
 ## Verification
 

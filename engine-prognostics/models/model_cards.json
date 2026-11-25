@@ -269,7 +269,14 @@
       "sensor_21_trend"
     ],
     "model_reload_verified": true,
-    "model_sha256": "bdd24b477eebb09428fc5e8f1cafaca435bf5c5ad10d49324af7337198a90200"
+    "model_sha256": "8b2a5403749ff2932ae7079f86846573a7d8386bb97481d8d5bcc4909bc29622",
+    "promotion_gate": {
+      "passed": true,
+      "decision_metric": "engine-separated validation endpoint MAE",
+      "selected_mae": 25.612469238725556,
+      "age_baseline_mae": 33.025,
+      "reason": "candidate beats baseline"
+    }
   },
   "FD002": {
     "subset": "FD002",
@@ -725,7 +732,14 @@
       "sensor_21_trend"
     ],
     "model_reload_verified": true,
-    "model_sha256": "881e9692939bc71f411143028948a65b63a3643b67309b75604a6c6b57347f95"
+    "model_sha256": "0c99112ecb2df3f93006c505d98e20a7fcf97b8c8d508c181506941da979e159",
+    "promotion_gate": {
+      "passed": true,
+      "decision_metric": "engine-separated validation endpoint MAE",
+      "selected_mae": 16.139363001963552,
+      "age_baseline_mae": 27.884615384615383,
+      "reason": "candidate beats baseline"
+    }
   },
   "FD003": {
     "subset": "FD003",
@@ -1001,7 +1015,14 @@
       "sensor_21_trend"
     ],
     "model_reload_verified": true,
-    "model_sha256": "8eb79f6f8f54106a7bf297917ff0b0993ae5b8217902199be4d49db629f00f14"
+    "model_sha256": "7c27e950bf45fb973e844f5bcb02972bee9c1ffc89e605b18e037bf33a2ead3a",
+    "promotion_gate": {
+      "passed": true,
+      "decision_metric": "engine-separated validation endpoint MAE",
+      "selected_mae": 26.028626252206674,
+      "age_baseline_mae": 51.575,
+      "reason": "candidate beats baseline"
+    }
   },
   "FD004": {
     "subset": "FD004",
@@ -1446,6 +1467,13 @@
       "sensor_21_trend"
     ],
     "model_reload_verified": true,
-    "model_sha256": "888ee6b2d0a266c2dd3bd59c4a2f55c1f63e0d05760e163462f2da99dbb835e0"
+    "model_sha256": "cf68027b1ad3a21397958f4959045527c3d783f63aaa492db68c7ccccd08fe45",
+    "promotion_gate": {
+      "passed": true,
+      "decision_metric": "engine-separated validation endpoint MAE",
+      "selected_mae": 24.977671930674035,
+      "age_baseline_mae": 48.12244897959184,
+      "reason": "candidate beats baseline"
+    }
   }
 }
